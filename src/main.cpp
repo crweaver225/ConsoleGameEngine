@@ -1,9 +1,8 @@
 
 #include <iostream>
-#include "ConsoleGameEngine.h"
+#include "Asteroids.h"
 
 int main() {
     std::cout<<"Starting Game Engine"<<"\n";
-    ConsoleGameEngine consoleGameEngine;
-    consoleGameEngine.ConstructConsole(80,80);
+    Asteroids asteroids;
 }
