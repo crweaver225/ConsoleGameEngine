@@ -8,6 +8,8 @@
 #include <iostream>
 #include <vector>
 #include <math.h>
+#include <string.h>
+
 
 
 enum PIXEL_TYPE {
@@ -68,14 +70,18 @@ class ConsoleGameEngine {
     public:
 
         WINDOW* system_window;
-        void ConstructConsole(int height, int width);
+        void ConstructConsole();
         virtual bool OnUserCreate() = 0;
         virtual bool OnUserUpdate(float elapsedTime) = 0;
 
+		int ScreenWidth() const;
+		int ScreenHeight() const;
+
     private:
 
-        void Draw(float x, float y, short c = 0x2588, short col = 0x000F);
+        void Draw(int x, int y, short c = 0x2588, short col = 0x000F);
         void GameThread();
+		void UserInput();
 };
 
 #endif

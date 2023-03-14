@@ -1,9 +1,6 @@
 #include "ConsoleGameEngine.h"
 
-void ConsoleGameEngine::ConstructConsole(int height, int width) {
-
-    m_nScreenHeight = height;
-    m_nScreenWidth = width;
+void ConsoleGameEngine::ConstructConsole() {
     
     // start ncurses
     initscr(); 
@@ -14,10 +11,10 @@ void ConsoleGameEngine::ConstructConsole(int height, int width) {
     //enable color
     start_color();
 
-    int x_max{getmaxx(stdscr)};
+    m_nScreenHeight = getmaxx(stdscr);
+	m_nScreenWidth = getmaxy(stdscr);
 
-    this->system_window = newwin(500, 500, 0, 0);
-
+    this->system_window = newwin(m_nScreenHeight, m_nScreenWidth, 0, 0);
 
     endwin();
 }
@@ -32,11 +29,12 @@ void ConsoleGameEngine::Start() {
     t.join();
 }
 
+
 void ConsoleGameEngine::GameThread() {
 
     auto tp1 = std::chrono::system_clock::now();
 	auto tp2 = std::chrono::system_clock::now();
-
+   
     keypad(system_window, TRUE);
 
     while (m_bAtomActive) {
@@ -47,8 +45,9 @@ void ConsoleGameEngine::GameThread() {
 		tp1 = tp2;
 		float fElapsedTime = elapsedTime.count();
 
-        // Handle keyboard import
-        std::memset(sKeyState, 0, 262 * sizeof(short));
+        memset(sKeyState, 0, 262 * sizeof(short));
+
+        nodelay(system_window, true);
 
         int c = wgetch(system_window);
         sKeyState[c] = 1;
@@ -56,47 +55,18 @@ void ConsoleGameEngine::GameThread() {
         // Refresh frame
         OnUserUpdate(fElapsedTime);
 
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
+
     }
 }
 
-void ConsoleGameEngine::Draw(float x, float y, short c, short col) {
-   // mvaddch(x, y, ACS_CKBOARD);
+void ConsoleGameEngine::Draw(int x, int y, short c, short col) {
+    //mvaddch(x, y, (char)0X2588);
     mvaddch(x, y, ACS_DIAMOND);
-  // mvaddch(x, y, '.');
+   //  mvaddch(x, y, '*');
 }
 
 void ConsoleGameEngine::DrawLine(int x1, int y1, int x2, int y2, short c, short col) {
-    /*
-    Draw(21.0,21.0,c,col);
-    Draw(22.0,22.0,c,col);
-    Draw(23.0,23.0,c,col);
-    Draw(24.0,24.0,c,col);
-    Draw(25.0,25.0,c,col);
-    Draw(26.0,26.0,c,col);
-    Draw(26.0,27.0,c,col);
-
-    Draw(21.0,21.0,c,col);
-    Draw(22.0,20.0,c,col);
-    Draw(23.0,19.0,c,col);
-    Draw(24.0,18.0,c,col);
-    Draw(25.0,17.0,c,col);
-    Draw(26.0,16.0,c,col);
-    Draw(26.0,15.0,c,col);
-
-
-    Draw(27.0,16.0,c,col);
-    Draw(27.0,17.0,c,col);
-    Draw(27.0,18.0,c,col);
-    Draw(27.0,19.0,c,col);
-    Draw(27.0,20.0,c,col);
-    Draw(27.0,21.0,c,col);
-    Draw(27.0,22.0,c,col);
-    Draw(27.0,23.0,c,col);
-    Draw(27.0,24.0,c,col);
-    Draw(27.0,25.0,c,col);
-    Draw(27.0,26.0,c,col);
-    */
- 
     
     // Iterators, counters required by algorithm
     int  x, y, dx, dy, dx1, dy1, px, py, xe, ye, i;
@@ -167,7 +137,12 @@ void ConsoleGameEngine::DrawLine(int x1, int y1, int x2, int y2, short c, short 
             Draw(x,y,c,col);
         }
     }
-    
 }
 
+int ConsoleGameEngine::ScreenWidth() const {
+    return m_nScreenWidth;
+}
 
+int ConsoleGameEngine::ScreenHeight() const {
+    return m_nScreenHeight;
+}

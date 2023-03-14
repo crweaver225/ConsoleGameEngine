@@ -10,15 +10,23 @@ class Asteroids: public ConsoleGameEngine {
         virtual bool OnUserUpdate(float elapsedTime) override;
 
     private:
-        std::vector<std::pair<float, float>> vecModelShip;
-        void DrawWireFrameModel(const std::vector<std::pair<float, float>> &vecModelCoordinates, float x, float y, float r, float s = 1.0, short col = COLOUR::FG_WHITE);
-
-        struct sSpaceObject {
+         struct sSpaceObject {
 		    int nSize;
 		    float x;
 		    float y;
 		    float dx;
 		    float dy;
 		    float angle;
-	    } player;
+	    }; 
+
+        std::vector<std::pair<float, float>> vecModelShip;
+        std::vector<std::pair<float, float>> vecModelAsteroid;
+
+        sSpaceObject player;
+        std::vector<sSpaceObject> vecAsteroids;
+
+        void WrapCoordinates(float ix, float iy, float &ox, float &oy);
+        void DrawWireFrameModel(const std::vector<std::pair<float, float>> &vecModelCoordinates, float x, float y, float r, float s = 0.65, short col = COLOUR::FG_WHITE);
+
+         
 };
