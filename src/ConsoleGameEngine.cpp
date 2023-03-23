@@ -60,10 +60,25 @@ void ConsoleGameEngine::GameThread() {
     }
 }
 
+bool ConsoleGameEngine::isOffScreen(float ox, float oy) const {
+    if (ox < 0.0f) { 
+		return true;
+	} else if (ox >= float(ScreenWidth())) { 
+		return true;
+	} else if (oy < 0.0f) { 
+		return true; 
+	} else if (oy >= (float)ScreenHeight()) { 
+		return true;
+	}
+    return false;
+}
+
+bool ConsoleGameEngine::isPointInsideCircle(float cx, float cy, float radius, float x, float y) const {
+    return (sqrt((x - cx)*(x-cx) + (y-cy)*(y-cy))) < radius;
+}
+
 void ConsoleGameEngine::Draw(int x, int y, short c, short col) {
-    //mvaddch(x, y, (char)0X2588);
     mvaddch(x, y, ACS_DIAMOND);
-   //  mvaddch(x, y, '*');
 }
 
 void ConsoleGameEngine::DrawLine(int x1, int y1, int x2, int y2, short c, short col) {

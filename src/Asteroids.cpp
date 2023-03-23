@@ -38,6 +38,22 @@ bool Asteroids::OnUserCreate() {
     return true;
 }
 
+void Asteroids::ResetGame() {
+	
+	player.x = 25;
+	player.y = 25;
+	player.dx = 0.0f;
+	player.dy = 0.0f;
+	player.angle = 0.1f;
+
+	vecAsteroids.clear();
+
+	vecAsteroids.push_back( { (int)4, 20.0f, 20.0f, 8.0f, -6.0f, 0.0 });
+	vecAsteroids.push_back( { (int)4, 100.0f, 20.0f, -5.0f, 3.0f, 0.0 });
+
+	clear();
+	refresh();
+}
 
 bool Asteroids::OnUserUpdate(float elapsedTime) {
 
@@ -50,7 +66,9 @@ bool Asteroids::OnUserUpdate(float elapsedTime) {
         player.angle -= 7.5f * elapsedTime;
     } else if (sKeyState[KEY_LEFT] == 1) {
         player.angle += 7.5f * elapsedTime;
-    }
+    } else if (sKeyState[' ']) {
+		vecBullets.push_back({(int)0, player.x, player.y, 50.0f * sinf(player.angle), -50.0f * cosf(player.angle), 100.0f});
+	}
 
 	player.x += player.dx * elapsedTime;
 	player.y += player.dy * elapsedTime;
@@ -59,7 +77,42 @@ bool Asteroids::OnUserUpdate(float elapsedTime) {
 
     DrawWireFrameModel(vecModelShip, player.x, player.y, player.angle);
 
+	for (auto &b : vecBullets) {
+		b.x += b.dx * elapsedTime;
+		b.y += b.dy * elapsedTime;
+		b.angle -= 1.0f * elapsedTime;
+		ConsoleGameEngine::Draw(b.x, b.y);
+		for (auto &a : vecAsteroids) {
+
+			if (isPointInsideCircle(a.x, a.y, a.nSize, b.x, b.y)) {
+
+				a.remove = true;
+				b.remove = true;
+
+				vecAsteroids.push_back({ (int)4, 30.0f * sinf(player.angle - 3.14159f/2.0f) + player.x, 
+				30.0f * cosf(player.angle - 3.14159f/2.0f) + player.y, 
+				10.0f * sin(player.angle), 10.0f*cosf(player.angle), 0.0f});
+			} 
+		}
+		if (isOffScreen(b.x, b.y)) { b.remove = true; }
+	}
+
+	auto i = std::remove_if(vecAsteroids.begin(), vecAsteroids.end(), [&](sSpaceObject o) { return (o.remove == true);});
+	if (i != vecAsteroids.end()) {
+		vecAsteroids.erase(i);
+	}
+
+	auto j = std::remove_if(vecBullets.begin(), vecBullets.end(), [&](sSpaceObject o) { return (o.remove == true);});
+	if (j != vecBullets.end()) {
+		vecBullets.erase(j);
+	}
+
 	for (auto &a : vecAsteroids) {
+
+		if (isPointInsideCircle(a.x, a.y, a.nSize, player.x, player.y)) {
+			ResetGame();
+		}  
+
 		a.x += a.dx * elapsedTime;
 		a.y += a.dy * elapsedTime;
 		a.angle += 0.5f * elapsedTime;
@@ -68,18 +121,23 @@ bool Asteroids::OnUserUpdate(float elapsedTime) {
 
 		DrawWireFrameModel(vecModelAsteroid, a.x, a.y, a.angle, (float)a.nSize, FG_YELLOW);
 	}
-
-
+	
     refresh();
 }
 
 void Asteroids::WrapCoordinates(float ix, float iy, float &ox, float &oy) {
-	ox = ix;
-	oy = iy;
-	if (ix < 0.0f) { ox = ix - (float)ScreenWidth(); }
-	if (ix >= float(ScreenWidth())) { ox = ix - (float)ScreenWidth(); }
-	if (iy < 0.0f) { oy = iy + (float)ScreenHeight(); }
-	if (iy >= (float)ScreenHeight()) { oy = iy - (float)ScreenHeight(); }
+	if (ix < 0.0f) { 
+		ox = (float)ScreenWidth() - ix; 
+	}
+	if (ix >= float(ScreenWidth())) { 
+		ox = ix - (float)ScreenWidth(); 
+	}
+	if (iy < 0.0f) { 
+		oy = iy + (float)ScreenHeight(); 
+	}
+	if (iy >= (float)ScreenHeight()) { 
+		oy = iy - (float)ScreenHeight();
+	}
 }
 
 void Asteroids::DrawWireFrameModel(const std::vector<std::pair<float, float>> &vecModelCoordinates, float x, float y, float r, float s, short col) {

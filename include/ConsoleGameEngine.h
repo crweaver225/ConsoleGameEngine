@@ -9,6 +9,8 @@
 #include <vector>
 #include <math.h>
 #include <string.h>
+#include <algorithm>
+#include <future>
 
 
 
@@ -66,6 +68,9 @@ class ConsoleGameEngine {
         short sKeyState[262] = { 0 };
 
         void DrawLine(int x1, int y1, int x2, int y2, short c = 0x2588, short col = 0x000F);
+		void Draw(int x, int y, short c = 0x2588, short col = 0x000F);
+		bool isPointInsideCircle(float cx, float cy, float radius, float x, float y) const;
+		bool isOffScreen(float ox, float oy) const;
 
     public:
 
@@ -79,7 +84,6 @@ class ConsoleGameEngine {
 
     private:
 
-        void Draw(int x, int y, short c = 0x2588, short col = 0x000F);
         void GameThread();
 		void UserInput();
 };
