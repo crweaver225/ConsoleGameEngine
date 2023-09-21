@@ -2,6 +2,9 @@
 
 Asteroids::Asteroids() {
 
+	_score = 0;
+	_highScore = 0;
+
     ConstructConsole();
     Start();
 }
@@ -32,6 +35,10 @@ bool Asteroids::OnUserCreate() {
 
 	vecAsteroids.push_back( { (int)4, 20.0f, 20.0f, 8.0f, -6.0f, 0.0 });
 	vecAsteroids.push_back( { (int)4, 100.0f, 20.0f, -5.0f, 3.0f, 0.0 });
+	vecAsteroids.push_back( { (int)4, 60.0f, 40.0f, -2.0f, 1.0f, 0.0 });
+	vecAsteroids.push_back( { (int)3, 35.0f, 75.0f, 3.0f, -2.0f, 0.0 });
+	vecAsteroids.push_back( { (int)2, 10.0f, 25.0f, -3.0f, 2.0f, 0.0 });
+	vecAsteroids.push_back( { (int)5, 0.0f, 5.0f, 2.0f, -2.0f, 0.0 });
 
     refresh();
 
@@ -39,6 +46,9 @@ bool Asteroids::OnUserCreate() {
 }
 
 void Asteroids::ResetGame() {
+
+	_highScore = std::max(_highScore, _score);
+	_score = 0;
 	
 	player.x = 25;
 	player.y = 25;
@@ -50,6 +60,8 @@ void Asteroids::ResetGame() {
 
 	vecAsteroids.push_back( { (int)4, 20.0f, 20.0f, 8.0f, -6.0f, 0.0 });
 	vecAsteroids.push_back( { (int)4, 100.0f, 20.0f, -5.0f, 3.0f, 0.0 });
+	vecAsteroids.push_back( { (int)4, 50.0f, 40.0f, -2.0f, 1.0f, 0.0 });
+	vecAsteroids.push_back( { (int)3, 35.0f, 75.0f, 3.0f, -2.0f, 0.0 });
 
 	clear();
 	refresh();
@@ -63,9 +75,9 @@ bool Asteroids::OnUserUpdate(float elapsedTime) {
 	   player.dx += sin(player.angle) * 100.0f * elapsedTime;
 	   player.dy -= cos(player.angle) * 100.0f * elapsedTime;
     } else if (sKeyState[KEY_RIGHT] == 1) {
-        player.angle -= 7.5f * elapsedTime;
+        player.angle -= 25.0f * elapsedTime;
     } else if (sKeyState[KEY_LEFT] == 1) {
-        player.angle += 7.5f * elapsedTime;
+        player.angle += 25.0f * elapsedTime;
     } else if (sKeyState[' ']) {
 		vecBullets.push_back({(int)0, player.x, player.y, 50.0f * sinf(player.angle), -50.0f * cosf(player.angle), 100.0f});
 	}
@@ -86,12 +98,34 @@ bool Asteroids::OnUserUpdate(float elapsedTime) {
 
 			if (isPointInsideCircle(a.x, a.y, a.nSize, b.x, b.y)) {
 
+				// Remove bullet
 				a.remove = true;
 				b.remove = true;
 
-				vecAsteroids.push_back({ (int)4, 30.0f * sinf(player.angle - 3.14159f/2.0f) + player.x, 
-				30.0f * cosf(player.angle - 3.14159f/2.0f) + player.y, 
-				10.0f * sin(player.angle), 10.0f*cosf(player.angle), 0.0f});
+				if (a.hit == false) {
+					vecAsteroids.push_back( { (int)2, a.x, a.y, 2.5f, 2.5f, 0.0, 0, 1 });
+					vecAsteroids.push_back( { (int)2, a.x, a.y, -2.5f, -2.5f, 0.0, 0, 1 });
+					vecAsteroids.push_back( { (int)2, a.x, a.y, 2.5f, -2.5f, 0.0, 0, 1 });
+				} 
+
+				int count = std::count_if(vecAsteroids.begin(),
+                               vecAsteroids.end(),
+                               [](sSpaceObject s) { return s.hit == false; });
+
+				if (count < 5) {
+					std::random_device dev;
+    				std::mt19937 rng(dev());
+					std::uniform_int_distribution<std::mt19937::result_type> dist10(-5,5);
+					int noise = dist10(rng);
+					vecAsteroids.push_back( { (int)4, 
+											(float)m_nScreenWidth * noise, 
+											(float)m_nScreenHeight * noise, 
+											10.0f * sin(player.angle) + noise, 
+											10.0f*cosf(player.angle) + noise, 
+											0.0f} );
+				}
+
+				_score += 10;
 			} 
 		}
 		if (isOffScreen(b.x, b.y)) { b.remove = true; }
@@ -121,6 +155,9 @@ bool Asteroids::OnUserUpdate(float elapsedTime) {
 
 		DrawWireFrameModel(vecModelAsteroid, a.x, a.y, a.angle, (float)a.nSize, FG_YELLOW);
 	}
+
+	RenderText(2,2,std::string{"Score: " + std::to_string(_score)});
+	RenderText(4,2,"High Score: " + std::to_string(_highScore));
 	
     refresh();
 }

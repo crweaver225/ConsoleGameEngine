@@ -1,5 +1,6 @@
 #include "ConsoleGameEngine.h"
-
+#include <random>
+#include <algorithm>
 
 class Asteroids: public ConsoleGameEngine {
     public:
@@ -18,6 +19,7 @@ class Asteroids: public ConsoleGameEngine {
 		    float dy;
 		    float angle;
             bool remove = false;
+            bool hit = false;
 	    }; 
 
         void ResetGame();
@@ -33,5 +35,6 @@ class Asteroids: public ConsoleGameEngine {
         void WrapCoordinates(float ix, float iy, float &ox, float &oy);
         void DrawWireFrameModel(const std::vector<std::pair<float, float>> &vecModelCoordinates, float x, float y, float r, float s = 0.65, short col = COLOUR::FG_WHITE);
 
-         
+        int _score;
+         int _highScore;
 };

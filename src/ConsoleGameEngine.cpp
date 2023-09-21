@@ -81,6 +81,11 @@ void ConsoleGameEngine::Draw(int x, int y, short c, short col) {
     mvaddch(x, y, ACS_DIAMOND);
 }
 
+void ConsoleGameEngine::RenderText(int x, int y, const std::string& text) {
+    mvprintw(x,y,text.c_str());
+    move(0, 0);
+}
+
 void ConsoleGameEngine::DrawLine(int x1, int y1, int x2, int y2, short c, short col) {
     
     // Iterators, counters required by algorithm

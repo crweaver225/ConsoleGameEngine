@@ -69,6 +69,7 @@ class ConsoleGameEngine {
 
         void DrawLine(int x1, int y1, int x2, int y2, short c = 0x2588, short col = 0x000F);
 		void Draw(int x, int y, short c = 0x2588, short col = 0x000F);
+		void RenderText(int x, int y, const std::string& text);
 		bool isPointInsideCircle(float cx, float cy, float radius, float x, float y) const;
 		bool isOffScreen(float ox, float oy) const;
 
