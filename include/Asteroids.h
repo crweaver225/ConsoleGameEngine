@@ -33,7 +33,7 @@ class Asteroids: public ConsoleGameEngine {
         std::vector<sSpaceObject> vecBullets;
 
         void WrapCoordinates(float ix, float iy, float &ox, float &oy);
-        void DrawWireFrameModel(const std::vector<std::pair<float, float>> &vecModelCoordinates, float x, float y, float r, float s = 0.65, short col = COLOUR::FG_WHITE);
+        void DrawWireFrameModel(const std::vector<std::pair<float, float>> &vecModelCoordinates, float x, float y, float r, float s = 0.65);
 
         int _score;
          int _highScore;

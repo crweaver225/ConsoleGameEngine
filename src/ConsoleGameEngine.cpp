@@ -11,8 +11,8 @@ void ConsoleGameEngine::ConstructConsole() {
     //enable color
     start_color();
 
-    m_nScreenHeight = getmaxx(stdscr);
-	m_nScreenWidth = getmaxy(stdscr);
+    m_nScreenHeight = getmaxy(stdscr);
+	m_nScreenWidth = getmaxx(stdscr);
 
     this->system_window = newwin(m_nScreenHeight, m_nScreenWidth, 0, 0);
 
@@ -55,10 +55,11 @@ void ConsoleGameEngine::GameThread() {
         // Refresh frame
         OnUserUpdate(fElapsedTime);
 
-        std::this_thread::sleep_for(std::chrono::milliseconds(10));
+        std::this_thread::sleep_for(std::chrono::milliseconds(_frameRate));
 
     }
 }
+
 
 bool ConsoleGameEngine::isOffScreen(float ox, float oy) const {
     if (ox < 0.0f) { 
@@ -77,16 +78,20 @@ bool ConsoleGameEngine::isPointInsideCircle(float cx, float cy, float radius, fl
     return (sqrt((x - cx)*(x-cx) + (y-cy)*(y-cy))) < radius;
 }
 
-void ConsoleGameEngine::Draw(int x, int y, short c, short col) {
-    mvaddch(x, y, ACS_DIAMOND);
+void ConsoleGameEngine::Draw(int x, int y) {
+    mvaddch(y, x, ACS_DIAMOND);
+}
+
+void ConsoleGameEngine::DrawChar(int x, int y, chtype c_type) {
+    mvaddch(y, x, c_type);
 }
 
 void ConsoleGameEngine::RenderText(int x, int y, const std::string& text) {
-    mvprintw(x,y,text.c_str());
+    mvprintw(y,x,text.c_str());
     move(0, 0);
 }
 
-void ConsoleGameEngine::DrawLine(int x1, int y1, int x2, int y2, short c, short col) {
+void ConsoleGameEngine::DrawLine(int x1, int y1, int x2, int y2) {
     
     // Iterators, counters required by algorithm
     int  x, y, dx, dy, dx1, dy1, px, py, xe, ye, i;
@@ -111,7 +116,7 @@ void ConsoleGameEngine::DrawLine(int x1, int y1, int x2, int y2, short c, short 
         } else { // Line is drawn right to left (swap ends)
             x = x2; y = y2; xe = x1;
         }
-        Draw(x,y,c,col);
+        Draw(x,y);
         // Rasterize the line
         for (i = 0; x < xe; i++) {
             x = x + 1;
@@ -128,7 +133,7 @@ void ConsoleGameEngine::DrawLine(int x1, int y1, int x2, int y2, short c, short 
             }
             // Draw pixel from line span at
             // currently rasterized position
-            Draw(x,y,c,col);
+            Draw(x,y);
         }
     } else { // The line is Y-axis dominant
         // Line is drawn bottom to top
@@ -137,7 +142,7 @@ void ConsoleGameEngine::DrawLine(int x1, int y1, int x2, int y2, short c, short 
         } else { // Line is drawn top to bottom
             x = x2; y = y2; ye = y1;
         }
-        Draw(x,y,c,col); // Draw first pixel
+        Draw(x,y); // Draw first pixel
         // Rasterize the line
         for (i = 0; y < ye; i++) {
             y = y + 1;
@@ -154,7 +159,7 @@ void ConsoleGameEngine::DrawLine(int x1, int y1, int x2, int y2, short c, short 
             }
             // Draw pixel from line span at
             // currently rasterized position
-            Draw(x,y,c,col);
+            Draw(x,y);
         }
     }
 }

@@ -67,8 +67,9 @@ class ConsoleGameEngine {
 
         short sKeyState[262] = { 0 };
 
-        void DrawLine(int x1, int y1, int x2, int y2, short c = 0x2588, short col = 0x000F);
-		void Draw(int x, int y, short c = 0x2588, short col = 0x000F);
+        void DrawLine(int x1, int y1, int x2, int y2);
+		void Draw(int x, int y);
+		void DrawChar(int x, int y, chtype c_type = ACS_DIAMOND);
 		void RenderText(int x, int y, const std::string& text);
 		bool isPointInsideCircle(float cx, float cy, float radius, float x, float y) const;
 		bool isOffScreen(float ox, float oy) const;
@@ -82,11 +83,11 @@ class ConsoleGameEngine {
 
 		int ScreenWidth() const;
 		int ScreenHeight() const;
+		void setFrameRate(int frameRate) { _frameRate = frameRate; };
 
     private:
-
+		int _frameRate = 10;
         void GameThread();
-		void UserInput();
 };
 
 #endif
