@@ -5,6 +5,6 @@
 
 int main() {
     std::cout<<"Starting Game Engine"<<"\n";
-    Asteroids asteroids;
-   // Snake snake = Snake(/*AI=*/true);
+   // Asteroids asteroids;
+    Snake snake = Snake(/*AI=*/true, /*train=*/ false);
 }

@@ -4,7 +4,7 @@
 
 class Snake: public ConsoleGameEngine {
     public:
-        explicit Snake(bool AI);
+        explicit Snake(bool AI, bool train = false);
         virtual bool OnUserCreate() override;
         virtual bool OnUserUpdate(float elapsedTime) override;
 
@@ -39,6 +39,7 @@ class Snake: public ConsoleGameEngine {
 
         Snake_Agent _snakeAgent;
         bool _ai;
+        bool _train;
         void runAgent();
 
         float _elapsedFrames;

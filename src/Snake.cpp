@@ -1,16 +1,12 @@
 #include "Snake.h"
 
-Snake::Snake(bool AI) {
-    if (AI) {
-        _ai = true;
-    } else {
-        _ai = false;
-    }
+Snake::Snake(bool AI, bool train) {
+    _ai = AI;
+    _train = train;
     setFrameRate(150);
     ConstructConsole();
     Start();
 }
-
 
 bool Snake::OnUserCreate() {
 
@@ -226,7 +222,7 @@ void Snake::resetSnake() {
 
     if (_points > _highScore) {
         _highScore = std::max (_highScore, _points);
-        if (_ai) {  _snakeAgent.SaveModel(); }
+        if (_ai && _train) {  _snakeAgent.SaveModel(); }
     }
     
     _points = 0;

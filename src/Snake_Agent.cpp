@@ -4,7 +4,7 @@ Snake_Agent::Snake_Agent()  {
    _net = std::make_shared<Dense_Net>();  // Properly initialize the network
    
     try {
-        torch::load(_net, "snake_ai2.pt");
+        torch::load(_net, "snake_ai.pt");
         std::cout << "Model loaded successfully." << std::endl;
         _numberOfGames = 200;
     } catch (const torch::Error& e) {
