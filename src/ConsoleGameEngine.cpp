@@ -82,8 +82,24 @@ void ConsoleGameEngine::Draw(int x, int y) {
     mvaddch(y, x, ACS_DIAMOND);
 }
 
+void ConsoleGameEngine::DrawWithColor(int x, int y, COLOUR color) {
+    start_color();
+    init_pair(2, color, COLOR_BLACK);
+    attron(COLOR_PAIR(2));
+    mvaddch(y, x, ACS_DIAMOND);
+    attroff(COLOR_PAIR(2));
+}
+
 void ConsoleGameEngine::DrawChar(int x, int y, chtype c_type) {
     mvaddch(y, x, c_type);
+}
+
+void ConsoleGameEngine::DrawCharWithColor(int x, int y, chtype c_type, COLOUR color) {
+    start_color();
+    init_pair(1, color, COLOR_BLACK);
+    attron(COLOR_PAIR(1));
+    mvaddch(y, x, c_type);
+    attroff(COLOR_PAIR(1));
 }
 
 void ConsoleGameEngine::RenderText(int x, int y, const std::string& text) {

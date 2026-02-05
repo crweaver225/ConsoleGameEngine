@@ -230,7 +230,7 @@ void Snake::resetSnake() {
 
 void Snake::DrawWireFrameModel() {
     // draw fruit
-    DrawChar(_fruit._x, _fruit._y, ACS_DIAMOND);
+    DrawCharWithColor(_fruit._x, _fruit._y, ACS_DIAMOND, FG_DARK_BLUE);
 
     // Draw snake head
     DrawChar(_snake._headX, _snake._headY, 'O');

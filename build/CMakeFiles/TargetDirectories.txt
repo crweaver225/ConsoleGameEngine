@@ -1,0 +1,3 @@
+/home/christopher/Desktop/ConsoleGameEngine/build/CMakeFiles/CGE.dir
+/home/christopher/Desktop/ConsoleGameEngine/build/CMakeFiles/edit_cache.dir
+/home/christopher/Desktop/ConsoleGameEngine/build/CMakeFiles/rebuild_cache.dir

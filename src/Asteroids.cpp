@@ -95,7 +95,7 @@ bool Asteroids::OnUserUpdate(float elapsedTime) {
 		b.x += b.dx * elapsedTime;
 		b.y += b.dy * elapsedTime;
 		b.angle -= 1.0f * elapsedTime;
-		ConsoleGameEngine::Draw(b.x, b.y);
+		ConsoleGameEngine::DrawWithColor(b.x, b.y, FG_DARK_RED);
 		for (auto &a : vecAsteroids) {
 
 			if (isPointInsideCircle(a.x, a.y, a.nSize, b.x, b.y)) {

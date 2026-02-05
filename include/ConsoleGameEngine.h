@@ -23,10 +23,10 @@ enum PIXEL_TYPE {
 
 enum COLOUR {
 	FG_BLACK		= 0x0000,
-	FG_DARK_BLUE    = 0x0001,	
+	FG_DARK_RED     = 0x0001,	
 	FG_DARK_GREEN   = 0x0002,
 	FG_DARK_CYAN    = 0x0003,
-	FG_DARK_RED     = 0x0004,
+	FG_DARK_BLUE    = 0x0004,
 	FG_DARK_MAGENTA = 0x0005,
 	FG_DARK_YELLOW  = 0x0006,
 	FG_GREY			= 0x0007,
@@ -69,7 +69,9 @@ class ConsoleGameEngine {
 
         void DrawLine(int x1, int y1, int x2, int y2);
 		void Draw(int x, int y);
+		void DrawWithColor(int x, int y, COLOUR color);
 		void DrawChar(int x, int y, chtype c_type = ACS_DIAMOND);
+		void DrawCharWithColor(int x, int y, chtype c_type, COLOUR color);
 		void RenderText(int x, int y, const std::string& text);
 		bool isPointInsideCircle(float cx, float cy, float radius, float x, float y) const;
 		bool isOffScreen(float ox, float oy) const;

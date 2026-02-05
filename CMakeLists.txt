@@ -9,7 +9,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_OSX_ARCHITECTURES "arm64")
 
 # Adjust the path as needed. This is just for my local machine
-set(LIBRARY_PATH "$ENV{HOME}/Desktop/cpp-playground/Libraries") 
+set(CMAKE_PREFIX_PATH /home/christopher/Downloads/libtorch-2.3.0/libtorch)
 
 # Find packages
 find_package(Curses REQUIRED)
